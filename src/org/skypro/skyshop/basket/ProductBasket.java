@@ -6,11 +6,11 @@ import java.util.Objects;
 
 public class ProductBasket {
     private int count = 0;
-    private final int maxCount = 5;
-    private final Product[] products = new Product[maxCount];
+    private final int MAX_COUNT = 5;
+    private final Product[] products = new Product[MAX_COUNT];
 
     public void addProduct(Product product) {
-        if (count == maxCount) {
+        if (count == MAX_COUNT) {
             System.out.println("Невозможно добавить продукт");
             return;
         }
@@ -38,13 +38,11 @@ public class ProductBasket {
 
         String result = "";
         for (int i = 0; i < count; i++) {
-            result += String.format(
-                    "%s: %d\n",
-                    products[i].getName(),
-                    products[i].getPrice());
+            result += products[i].toString() + "\n";
         }
 
-        result += "Итого: " + getTotalCost();
+        result += "Итого: " + getTotalCost() + "\n";
+        result += "Специальных товаров:  " + getNumberOfSpecialProducts();
 
         System.out.println(result);
     }
@@ -57,6 +55,18 @@ public class ProductBasket {
         }
 
         return false;
+    }
+
+    public int getNumberOfSpecialProducts(){
+        int number =0;
+
+        for (int i = 0; i < count; i++) {
+            if (products[i].isSpecial()) {
+                number++;
+            }
+        }
+
+        return  number;
     }
 
     public void clearBasket() {
