@@ -2,7 +2,7 @@ package org.skypro.skyshop.search;
 
 public class SearchEngine {
 
-    Searchable[] searchables;
+    private Searchable[] searchables;
     private static int index = 0;
 
     public SearchEngine(int searchablesSize) {
@@ -17,7 +17,7 @@ public class SearchEngine {
                 break;
             }
 
-            if (searchables[i].searchTerm().contains(search)) {
+            if (searchables[i].getSearchTerm().contains(search)) {
                 result[j] = searchables[i];
                 j++;
             }
@@ -27,6 +27,9 @@ public class SearchEngine {
     }
 
     public void add(Searchable searchable) {
+        if (searchables.length == index){
+            return;
+        }
         searchables[index] = searchable;
         index++;
     }

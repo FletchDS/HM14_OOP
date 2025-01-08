@@ -15,11 +15,15 @@ public class Main {
         Article article1 = new Article("Some name", "Some description");
         Article article2 = new Article("Another name", "Another description");
         Article article3 = new Article("And another name", "And another description");
+        Article article4 = new Article("And another name", "And another description");
+        Article article5 = new Article("And another name", "And another description");
 
         searchEngine.add(product);
         searchEngine.add(article1);
         searchEngine.add(article2);
         searchEngine.add(article3);
+        searchEngine.add(article4);
+        searchEngine.add(article5);
 
         Searchable[] searchables;
 
