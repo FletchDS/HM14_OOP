@@ -7,6 +7,11 @@ public abstract class Product implements Searchable {
     private String name;
 
     public Product(String name) {
+        if (name == null) {
+            throw new NullPointerException("Попытка обращения к переменной со значением null");
+        } else if (name.isBlank()) {
+            throw new IllegalArgumentException("Строка была пустой или состояла исключительно из пробелов");
+        }
         this.name = name;
     }
 

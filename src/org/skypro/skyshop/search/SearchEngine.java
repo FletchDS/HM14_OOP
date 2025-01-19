@@ -13,7 +13,7 @@ public class SearchEngine {
         Searchable[] result = new Searchable[5];
 
         for (int i = 0, j = 0; i < searchables.length && i < index; i++) {
-            if (j >=5){
+            if (j >= 5) {
                 break;
             }
 
@@ -26,8 +26,38 @@ public class SearchEngine {
         return result;
     }
 
+    public Searchable getSearchTerm(String search) throws BestResultNotFound {
+        Searchable result = null;
+        int maxSubStringCount = 0;
+
+        for (int i = 0, tempCount = 0, lastIndex = 0; i < searchables.length && i < index; i++) {
+            Searchable searchable = searchables[i];
+            while (true)
+            {
+                lastIndex = searchable.getSearchTerm().indexOf(search, lastIndex);
+                if (lastIndex !=-1){
+                    tempCount++;
+                    lastIndex += search.length();
+                } else {
+                    break;
+                }
+            }
+
+            if(maxSubStringCount < tempCount){
+                result = searchables[i];
+                maxSubStringCount = tempCount;
+            }
+            tempCount = 0;
+        }
+
+        if (result == null){
+            throw new BestResultNotFound(search);
+        }
+        return result;
+    }
+
     public void add(Searchable searchable) {
-        if (searchables.length == index){
+        if (searchables.length == index) {
             return;
         }
         searchables[index] = searchable;
