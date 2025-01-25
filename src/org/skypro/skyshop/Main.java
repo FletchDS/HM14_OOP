@@ -1,15 +1,22 @@
 package org.skypro.skyshop;
 
 import org.skypro.skyshop.article.Article;
+import org.skypro.skyshop.basket.ProductBasket;
+import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.product.discount.DiscountedProduct;
 import org.skypro.skyshop.product.simple.SimpleProduct;
 import org.skypro.skyshop.search.BestResultNotFound;
 import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
+import java.util.List;
+
 public class Main {
 
     public static void main(String[] args) {
+
+        System.out.println("----------------seach----------------");
+
         System.out.println("Ошибка 1");
         try {
             SimpleProduct product = new SimpleProduct("", 50);
@@ -40,14 +47,14 @@ public class Main {
 
         System.out.println("\nПоиск самого подходящего элемента");
         try {
-            SearchEngine searchEngine = new SearchEngine(5);
+            SearchEngine searchEngine = new SearchEngine();
 
-            SimpleProduct product1 = new SimpleProduct("Арбузные семена", 50);
-            SimpleProduct product2 = new SimpleProduct("Арбузный сок 'Добрый Арбуз'", 50);
+            SimpleProduct product3 = new SimpleProduct("Арбузные семена", 50);
+            SimpleProduct product4 = new SimpleProduct("Арбузный сок 'Добрый Арбуз'", 50);
             Article article = new Article("Лучшие сорта арбузов", "Лучшие сорта арбузов");
 
-            searchEngine.add(product1);
-            searchEngine.add(product2);
+            searchEngine.add(product3);
+            searchEngine.add(product4);
             searchEngine.add(article);
 
             Searchable searchable = searchEngine.getSearchTerm("Арбуз");
@@ -61,5 +68,31 @@ public class Main {
         } catch (BestResultNotFound bestResultNotFound) {
             System.out.println(bestResultNotFound);
         }
+
+        System.out.println("----------------basket----------------");
+
+        ProductBasket productBasket = new ProductBasket();
+
+        Product product1 = new DiscountedProduct("Арбуз", 100, 20);
+        Product product2 = new SimpleProduct("Арбузный сок", 200);
+
+        productBasket.addProduct(product1);
+        productBasket.addProduct(product2);
+
+        productBasket.printBasket();
+
+        List<Product> removedProducts = productBasket.removeProduct("Арбуз");
+
+        System.out.println("\nУдаленные продукты = " + removedProducts);
+
+        removedProducts = productBasket.removeProduct("Ничего");
+
+        if (removedProducts.isEmpty()) {
+            System.out.println("\nСписок пуст");
+        }
+
+        System.out.println();
+
+        productBasket.printBasket();
     }
 }

@@ -1,25 +1,22 @@
 package org.skypro.skyshop.search;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SearchEngine {
 
-    private Searchable[] searchables;
-    private static int index = 0;
+    private List<Searchable> searchables;
 
-    public SearchEngine(int searchablesSize) {
-        this.searchables = new Searchable[searchablesSize];
+    public SearchEngine() {
+        this.searchables = new ArrayList<>();
     }
 
-    public Searchable[] search(String search) {
-        Searchable[] result = new Searchable[5];
+    public List<Searchable> search(String search) {
+        ArrayList<Searchable> result = new ArrayList<>();
 
-        for (int i = 0, j = 0; i < searchables.length && i < index; i++) {
-            if (j >= 5) {
-                break;
-            }
-
-            if (searchables[i].getSearchTerm().contains(search)) {
-                result[j] = searchables[i];
-                j++;
+        for (int i = 0; i < searchables.size(); i++) {
+            if (searchables.get(i).getSearchTerm().contains(search)) {
+                result.add(searchables.get(i));
             }
         }
 
@@ -30,12 +27,11 @@ public class SearchEngine {
         Searchable result = null;
         int maxSubStringCount = 0;
 
-        for (int i = 0, tempCount = 0, lastIndex = 0; i < searchables.length && i < index; i++) {
-            Searchable searchable = searchables[i];
-            while (true)
-            {
+        for (int i = 0, tempCount = 0, lastIndex = 0; i < searchables.size(); i++) {
+            Searchable searchable = searchables.get(i);
+            while (true) {
                 lastIndex = searchable.getSearchTerm().indexOf(search, lastIndex);
-                if (lastIndex !=-1){
+                if (lastIndex != -1) {
                     tempCount++;
                     lastIndex += search.length();
                 } else {
@@ -43,24 +39,20 @@ public class SearchEngine {
                 }
             }
 
-            if(maxSubStringCount < tempCount){
-                result = searchables[i];
+            if (maxSubStringCount < tempCount) {
+                result = searchables.get(i);
                 maxSubStringCount = tempCount;
             }
             tempCount = 0;
         }
 
-        if (result == null){
+        if (result == null) {
             throw new BestResultNotFound(search);
         }
         return result;
     }
 
     public void add(Searchable searchable) {
-        if (searchables.length == index) {
-            return;
-        }
-        searchables[index] = searchable;
-        index++;
+        searchables.add(searchable);
     }
 }
