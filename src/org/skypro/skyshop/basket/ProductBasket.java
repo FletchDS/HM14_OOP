@@ -6,26 +6,21 @@ import java.util.*;
 
 public class ProductBasket {
     private int count = 0;
-    private final List<Product> products = new LinkedList<>();
+    private final Map<String, List<Product>> products = new HashMap<>();
 
     public void addProduct(Product product) {
-        products.add(product);
+        products.computeIfAbsent(product.getName(), s -> new ArrayList<>()).add(product);
 
         count++;
     }
 
-    public List<Product> removeProduct(String name){
+    public List<Product> removeProduct(String name) {
         List<Product> result = new ArrayList<>();
-        Iterator<Product> productIterator = products.iterator();
 
-        while (productIterator.hasNext()){
-            Product product = productIterator.next();
+        if (products.containsKey(name)){
+            result = products.get(name);
 
-            if (Objects.equals(product.getName(), name)){
-                result.add(product);
-                products.remove(product);
-                count--;
-            }
+            products.remove(name);
         }
 
         return result;
@@ -34,8 +29,10 @@ public class ProductBasket {
     public int getTotalCost() {
         int result = 0;
 
-        for (int i = 0; i < count; i++) {
-            result += products.get(i).getPrice();
+        for (Map.Entry<String, List<Product>> tempProducts : products.entrySet()) {
+            for (Product product : tempProducts.getValue()) {
+                result += product.getPrice();
+            }
         }
 
         return result;
@@ -48,8 +45,10 @@ public class ProductBasket {
         }
 
         String result = "";
-        for (int i = 0; i < count; i++) {
-            result += products.get(i).toString() + "\n";
+        for (Map.Entry<String, List<Product>> tempProducts : products.entrySet()) {
+            for (Product product : tempProducts.getValue()) {
+                result += product.toString() + "\n";
+            }
         }
 
         result += "Итого: " + getTotalCost() + "\n";
@@ -59,30 +58,33 @@ public class ProductBasket {
     }
 
     public boolean findProduct(String productName) {
-        for (int i = 0; i < count; i++) {
-            if (Objects.equals(products.get(i).getName(), productName)) {
-                return true;
-            }
+        if (products.containsKey(productName)) {
+            return true;
+        } else {
+            return false;
         }
-
-        return false;
     }
 
-    public int getNumberOfSpecialProducts(){
-        int number =0;
+    public int getNumberOfSpecialProducts() {
+        int number = 0;
 
-        for (int i = 0; i < count; i++) {
-            if (products.get(i).isSpecial()) {
-                number++;
+        for (Map.Entry<String, List<Product>> tempProducts : products.entrySet()) {
+            for (Product product : tempProducts.getValue()) {
+                if (product.isSpecial()) {
+                    number++;
+                }
             }
         }
 
-        return  number;
+        return number;
     }
 
     public void clearBasket() {
-        for (Product product : products) {
-            product = null;
+        for (Map.Entry<String, List<Product>> tempProducts : products.entrySet()) {
+            for (Product product : tempProducts.getValue()) {
+                product = null;
+            }
+            tempProducts = null;
         }
 
         count = 0;
