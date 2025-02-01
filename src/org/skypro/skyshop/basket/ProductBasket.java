@@ -2,29 +2,40 @@ package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
 
-import java.util.Objects;
+import java.util.*;
 
 public class ProductBasket {
     private int count = 0;
-    private final int MAX_COUNT = 5;
-    private final Product[] products = new Product[MAX_COUNT];
+    private final List<Product> products = new LinkedList<>();
 
     public void addProduct(Product product) {
-        if (count == MAX_COUNT) {
-            System.out.println("Невозможно добавить продукт");
-            return;
-        }
-
-        products[count] = product;
+        products.add(product);
 
         count++;
+    }
+
+    public List<Product> removeProduct(String name){
+        List<Product> result = new ArrayList<>();
+        Iterator<Product> productIterator = products.iterator();
+
+        while (productIterator.hasNext()){
+            Product product = productIterator.next();
+
+            if (Objects.equals(product.getName(), name)){
+                result.add(product);
+                products.remove(product);
+                count--;
+            }
+        }
+
+        return result;
     }
 
     public int getTotalCost() {
         int result = 0;
 
         for (int i = 0; i < count; i++) {
-            result += products[i].getPrice();
+            result += products.get(i).getPrice();
         }
 
         return result;
@@ -38,7 +49,7 @@ public class ProductBasket {
 
         String result = "";
         for (int i = 0; i < count; i++) {
-            result += products[i].toString() + "\n";
+            result += products.get(i).toString() + "\n";
         }
 
         result += "Итого: " + getTotalCost() + "\n";
@@ -49,7 +60,7 @@ public class ProductBasket {
 
     public boolean findProduct(String productName) {
         for (int i = 0; i < count; i++) {
-            if (Objects.equals(products[i].getName(), productName)) {
+            if (Objects.equals(products.get(i).getName(), productName)) {
                 return true;
             }
         }
@@ -61,7 +72,7 @@ public class ProductBasket {
         int number =0;
 
         for (int i = 0; i < count; i++) {
-            if (products[i].isSpecial()) {
+            if (products.get(i).isSpecial()) {
                 number++;
             }
         }
