@@ -4,18 +4,18 @@ import java.util.*;
 
 public class SearchEngine {
 
-    private List<Searchable> searchables;
+    private Set<Searchable> searchables;
 
     public SearchEngine() {
-        this.searchables = new ArrayList<>();
+        this.searchables = new HashSet<>();
     }
 
-    public TreeMap<Searchable, List<Searchable>> search(String search) {
-        TreeMap<Searchable, List<Searchable>> result = new TreeMap<>((s1, s2) -> s1.getName().compareTo(s2.getName()));
+    public TreeSet<Searchable> search(String search) {
+        TreeSet<Searchable> result = new TreeSet<>(new SearchableComparator());
 
-        for (int i = 0; i < searchables.size(); i++) {
-            if (searchables.get(i).getSearchTerm().contains(search)) {
-                result.computeIfAbsent(searchables.get(i), searchable -> new ArrayList<>()).add(searchables.get(i));
+        for (Searchable searchable : searchables) {
+            if (searchable.getSearchTerm().contains(search)) {
+                result.add(searchable);
             }
         }
 
@@ -24,10 +24,9 @@ public class SearchEngine {
 
     public Searchable getSearchTerm(String search) throws BestResultNotFound {
         Searchable result = null;
-        int maxSubStringCount = 0;
+        int maxSubStringCount = 0, tempCount = 0, lastIndex = 0;
 
-        for (int i = 0, tempCount = 0, lastIndex = 0; i < searchables.size(); i++) {
-            Searchable searchable = searchables.get(i);
+        for (Searchable searchable : searchables) {
             while (true) {
                 lastIndex = searchable.getSearchTerm().indexOf(search, lastIndex);
                 if (lastIndex != -1) {
@@ -39,7 +38,7 @@ public class SearchEngine {
             }
 
             if (maxSubStringCount < tempCount) {
-                result = searchables.get(i);
+                result = searchable;
                 maxSubStringCount = tempCount;
             }
             tempCount = 0;
@@ -53,5 +52,20 @@ public class SearchEngine {
 
     public void add(Searchable searchable) {
         searchables.add(searchable);
+    }
+
+    private static class SearchableComparator implements Comparator<Searchable> {
+
+        @Override
+        public int compare(Searchable o1, Searchable o2) {
+            int i = Integer.compare(o2.getName().length(), o1.getName().length());
+
+            if (i == 0) {
+                return o1.getName().compareTo(o2.getName());
+            } else {
+                return i;
+            }
+
+        }
     }
 }
