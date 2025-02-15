@@ -10,7 +10,7 @@ import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class Main {
 
@@ -100,17 +100,17 @@ public class Main {
 
         SearchEngine searchEngine = new SearchEngine();
 
-        SimpleProduct simpleProduct1 = new SimpleProduct("Сок 'Арбуз'", 50);
-        SimpleProduct simpleProduct2 = new SimpleProduct("Арбузные семена", 50);
-        Article article1 = new Article("Дыня и Арбуз", "Тут описание дыни и арбуза");
-        Article article2 = new Article("Лучшие сорта арбузов", "Лучшие сорта арбузов");
+        Article article1 = new Article("Первый арбуз", "Будет 4");
+        Article article2 = new Article("Второй арбуз", "Будет 3");
+        SimpleProduct simpleProduct1 = new SimpleProduct("Малый арбузный сок", 50);
+        SimpleProduct simpleProduct2 = new SimpleProduct("Большой арбузный сок", 50);
 
         searchEngine.add(article1);
+        searchEngine.add(article2);
         searchEngine.add(simpleProduct1);
         searchEngine.add(simpleProduct2);
-        searchEngine.add(article2);
 
-        Map<Searchable, List<Searchable>> searchables = searchEngine.search("Арбуз");
-        System.out.println("Мапа отсортированная по имени = " + searchables);
+        Set<Searchable> searchables = searchEngine.search("арбуз");
+        System.out.println("Отсортированный Set = " + searchables);
     }
 }
