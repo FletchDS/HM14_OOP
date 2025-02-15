@@ -17,7 +17,7 @@ public class ProductBasket {
     public List<Product> removeProduct(String name) {
         List<Product> result = new ArrayList<>();
 
-        if (products.containsKey(name)){
+        if (products.containsKey(name)) {
             result = products.get(name);
 
             products.remove(name);
@@ -29,11 +29,9 @@ public class ProductBasket {
     public int getTotalCost() {
         int result = 0;
 
-        for (Map.Entry<String, List<Product>> tempProducts : products.entrySet()) {
-            for (Product product : tempProducts.getValue()) {
-                result += product.getPrice();
-            }
-        }
+        result = products.values().stream().flatMap(Collection::stream)
+                .mapToInt(Product::getPrice)
+                .sum();
 
         return result;
     }
@@ -44,17 +42,11 @@ public class ProductBasket {
             return;
         }
 
-        String result = "";
-        for (Map.Entry<String, List<Product>> tempProducts : products.entrySet()) {
-            for (Product product : tempProducts.getValue()) {
-                result += product.toString() + "\n";
-            }
-        }
+        products.values().stream().flatMap(Collection::stream)
+                .forEach(i -> System.out.print(i.toString() + "\n"));
 
-        result += "Итого: " + getTotalCost() + "\n";
-        result += "Специальных товаров:  " + getNumberOfSpecialProducts();
-
-        System.out.println(result);
+        System.out.println("Итого: " + getTotalCost());
+        System.out.println("Специальных товаров:  " + getNumberOfSpecialProducts());
     }
 
     public boolean findProduct(String productName) {
@@ -68,24 +60,19 @@ public class ProductBasket {
     public int getNumberOfSpecialProducts() {
         int number = 0;
 
-        for (Map.Entry<String, List<Product>> tempProducts : products.entrySet()) {
-            for (Product product : tempProducts.getValue()) {
-                if (product.isSpecial()) {
-                    number++;
-                }
-            }
-        }
+        number = (int) products.values().stream().flatMap(Collection::stream)
+                .filter(Product::isSpecial)
+                .count();
 
         return number;
     }
 
     public void clearBasket() {
-        for (Map.Entry<String, List<Product>> tempProducts : products.entrySet()) {
-            for (Product product : tempProducts.getValue()) {
-                product = null;
-            }
-            tempProducts = null;
-        }
+        products.values().stream().flatMap(Collection::stream)
+                .forEach(i -> i = null);
+
+        products.entrySet()
+                .forEach(i -> i = null);
 
         count = 0;
     }
