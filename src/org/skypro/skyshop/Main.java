@@ -96,6 +96,12 @@ public class Main {
 
         productBasket.printBasket();
 
+        productBasket.clearBasket();
+
+        System.out.println("\nКорзина очищена");
+
+        productBasket.printBasket();
+
         System.out.println("----------------search----------------");
 
         SearchEngine searchEngine = new SearchEngine();
